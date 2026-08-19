@@ -49,7 +49,6 @@ public class User {
     @PrePersist
     protected void onCreate() {
         this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
         this.status = UserStatus.ACTIVE;
         this.role = Roles.USER;
     }

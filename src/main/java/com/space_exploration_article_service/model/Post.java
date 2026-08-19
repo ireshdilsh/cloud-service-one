@@ -55,12 +55,7 @@ public class Post {
     @PrePersist
     protected void onCreate() {
         this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
         externalId = UUID.randomUUID();
         postType = PostType.DRAFT;
     }
-
-
-
-    
 }

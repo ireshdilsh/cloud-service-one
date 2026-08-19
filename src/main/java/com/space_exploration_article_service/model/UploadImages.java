@@ -32,6 +32,5 @@ public class UploadImages {
     @PrePersist
     protected void onCreate() {
         this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
     }
 }
