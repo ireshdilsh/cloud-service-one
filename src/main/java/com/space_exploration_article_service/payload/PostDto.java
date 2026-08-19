@@ -2,8 +2,8 @@ package com.space_exploration_article_service.payload;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
-import com.space_exploration_article_service.model.User;
 import com.space_exploration_article_service.utils.PostType;
 
 import lombok.AllArgsConstructor;
@@ -17,11 +17,15 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PostDto {
 
+    private UUID id;
+
     private String title;
 
     private String content;
 
     private String category;
+
+    private Instant createdAt;
 
     private Instant updatedAt;
 
@@ -29,5 +33,5 @@ public class PostDto {
 
     private Set<UploadImagesDto> images;
 
-    private User user;
+    private UUID authorId;
 }

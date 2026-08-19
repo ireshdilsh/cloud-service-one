@@ -4,23 +4,21 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import com.space_exploration_article_service.utils.PostType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -34,28 +32,35 @@ public class Post {
     private Long id;
 
     private UUID externalId;
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
     private String category;
     private Instant createdAt;
     private Instant updatedAt;
-    private PostType postType ;
+    private PostType postType;
 
-    @OneToMany
-    @JoinColumn(name ="parcel_job_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<UploadImages> parcelImages;
+    /** ID of the author managed by the separate user microservice. */
+    @Column(nullable = false, updatable = false)
+    private UUID authorId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UploadImages> images;
 
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = Instant.now();
         externalId = UUID.randomUUID();
-        postType = PostType.DRAFT;
+        if (postType == null) {
+            postType = PostType.DRAFT;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = Instant.now();
     }
 }
