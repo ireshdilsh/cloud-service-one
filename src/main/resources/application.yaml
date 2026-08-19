@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: space-exploration-article-service
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+server:
+  port: ${PORT:8080}
